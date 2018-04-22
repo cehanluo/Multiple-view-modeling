@@ -1,36 +1,64 @@
 # Multiple-view modeling
 
 ### 1. Initial normal estimation
+When estimate the light direction, place a highly reflective sphere next to the object.
+
+![](./picture/sphere.png)
+
+Then a fixed camera is used to capture a sequence of images of changing the direction of light source (incoming light vector).
+When finding light vector, search for the point with the maximum intensity in the sphere
+firstly. Then, localize the point of mirror reflection - hightlight point. Since the geometry of sphere and
+viewing direction V are known. The light direction L of a certain image could be calculate through
+
+![](./picture/reflection.png)
+
+
 #### 1.1 Get data from the given path
 Project description has already give the data link which contains some
-images.
+images and light vector.
 #### 1.2 Uniform resampling for light direction
-(1) Build light direction sphere - build a standar icosahedron. Then,
-perform subdivision on each face 4 times recursively. Use library "icosphere.m"
-could produce this result and get the vertices coordinates. (This assume
-the object is located at the center of the light direction sphere.)
+(1) Build virtual light direction sphere - build a standard icosahedron. Then,
+perform subdivision on each face 4 times recursively and get the vertices coordinates.
+Assume the sample object locates at the center of the light direction sphere.
+In this model, assume the light source move above the sphere surface. When a light
+source acts along the line between light source and sphere center, find the nearest
+vetex and use its coordinate (surface normal N) as Lo. Since the sample is treated
+as fully diffuse object, the outcoming light radiance Ie does not depend on viewing
+direction. It dose depend on direction of illumination, which could be expressed by the
+angle between light direction and normal direction of sample. Hence, the light radiance
+(brightness) Ie = k_d * cos(theata) * Ii, where Ii is the incoming light radiance.
 
-(2) Get Li of each data set from its lightvec file - Li is the light vector of each image, represent in
-(x,y,z). Normalize before use.
+![](./picture/lambert_law.png)
+
+Since light vector Li could represent light direction and N is surface normal vector,
+cos(theata) = N * Li after normalizing N and Li ( ||N|| = ||Li|| = 1). Hence, lambert's
+law could be expressed as following equation.
+
+![](./picture/lambert.png)
+
+(2) Hence, get incoming light vector Li of sphere's highlight in each image i
+in data set from lightvec file, which represent in (x,y,z). Normalize it before use
+(||Li|| = 1).
 
 
-(3) Get Lo of each vertex by finding the nearest Li from the vertex - But there might be
-some duplicate indices needed to be deleted. To be mentioned, the
-coordinates of a vertex in the subdivision sphere could be used as the surface normal in
-vertex surface. And the light direction Li is the vector point from surface to the light source.
-(This could be found on lecture notes "light.ppt", p30-31.
-Then, Lo = nearest(Li).
+(3) Find the vertex, which has the nearest surface normal N (||N|| = 1) with Li.
+Then, let Lo = N.
 
-(4) Interpolate the image Io at Lo by
+![](./picture/brdf1.png)
+
+(4) According to lambert's law and let k_d = 1. Interpolate the image light randiance Io at Lo by
 
                                                           Lo * Li' * Ii(x,y)
            Io(x,y) = sum_{i | Li's NN == Lo} * -------------------------------------
                                                    sum_{i | Li's NN == Lo} Lo * Li'
 
-This equation expressed in the Part 4.2 Uniform resampling of given paper "Dense Photometri Stereo Using a Mirror
-Sphere and Graph Cut". In this project, Ii means ith image in the dataset and Li is the light vector
-of the corresponding image. When processing, we would use all images, get resample image Io which is
-a matrix with an adding dimension of image number index. Finally, resampled images and light vectors of them.
+Ii(x,y) is the intensity at pixel (x,y) of i_th image in the image dataset. Set the i_th image in the center
+of the light direction sphere. With given vector, find the coordinates of nearest vextex of light vector Li.
+Then make Lo=N as shown in (3). The outcoming radiance (brightness) of pixel (x,y)
+Ie(x,y) = k_d * Lo * Li * Ii(x,y) = Lo * Li * Ii(x,y) when assuming k_d = 1.
+Then devide Ie with wights sum_{i | Li's NN == Lo} Lo * Li', get the weighted light radiance of each image Io.
+The set of Io become the resampled images.
+
 
 #### 1.3 Denominator image - automatic selection
 (choose an image to cancel out the  surface albedo by producing ratio images)
@@ -76,3 +104,4 @@ Make use of function [shapeletsurf()][].
 
 
 [shapeletsurf()]:http://www.peterkovesi.com/matlabfns/Shapelet/shapeletsurf.m "a"
+
