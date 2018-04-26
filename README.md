@@ -1,5 +1,7 @@
 # Multiple-view modeling
 
+![](./picture/result.jpg)
+
 ### 1. Initial normal estimation
 When estimate the light direction, place a highly reflective sphere next to the object.
 
@@ -89,19 +91,26 @@ Remember to keep all normal in the same direction (reverse normal with negative 
 
 ### 2. Normal refinement by MRF using graph cuts
 #### 2.1 Create labels with z>0 on 5-times subdivided icosahedron
-To increate precision, implement 5 times recursive subdivision of each face of an icosahedron.
+From initial normal estimation, a set of normal vecotr of each pixel in one object is acquired. 
+But this set of normal vector is massive, and it would show value jump in some pixels. 
+To make result from initial normal estimation smoother, implement 5 times recursive subdivision of each face of an icosahedron.
 Get the vertice information in the sphere. |L|=5057 --> filter out light vectors with z>0,
-L is a discrete set of labels corresponding to different normal orientations.
+L is a discrete set of labels corresponding to different normal orientations. Map the norms from initial
+normal estimation to L, which only hve 5057 labels. Use graph cut to realize smooth surface process.
 
 #### 2.2 Construct graph
-According to the given information in project description, use GCO 3.0 to construct graph.
+According to the given information in project description, use GCO 3.0 to construct graph. 
+Transform 2D coordinate graph to 1D coordinate graph. Then, connect 4 neighbour points of one 
+point when preparation.
 
 #### 2.3 Minimize energy functions
 Use GCO_expansion to calculate the min energy. Then use GCO_Getlabeling to get the label of segmentation result.
 
 ### 3. Build model
-With refine normals of all pixels, reconstruct surface of all pixels.
-Make use of function [shapeletsurf()][].
+With refine normals of all pixels, calculate gradient or slant & tilt angle of each pixel. Then, 
+reconstruct surface of all pixels to get reconstruction surface. Make use of function [shapeletsurf()][]. 
+The reconstruction surface of each example is shown in the top table.
+
 
 
 [shapeletsurf()]:http://www.peterkovesi.com/matlabfns/Shapelet/shapeletsurf.m "a"
