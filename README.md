@@ -1,6 +1,6 @@
 # Multiple-view modeling
 
-<iframe height=498 width=510 src="./output.mov">
+<video width="480" height="480" controls> <source src="output.mov"> </video>
 
 ![](./picture/result.jpg)
 
