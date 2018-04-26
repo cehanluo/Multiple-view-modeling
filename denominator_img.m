@@ -1,4 +1,4 @@
-function [de_ind]=denominator_img(images)
+function de_ind=denominator_img(images)
 % images is 3 dimensional matrix, images(:,:,i) is a gray image, i is the
 % unique number of one image
 % h: height; w: width; num: number of images saved in this matrix 

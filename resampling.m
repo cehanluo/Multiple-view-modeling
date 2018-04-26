@@ -13,8 +13,8 @@ index=nearestneighbour(Li',Lo');
 
 % initialize Lr for resampling images from Lo but each element in Lor is unique
 Lr = zeros(0, 3);
-[m,n,num]=size(images);
-re_images=zeros([m,n,num]); % re_images is 4 dimension
+[m,n,~]=size(images);
+re_images=zeros([m,n,0]); % re_images is 4 dimension
 
 for i=1:size(Lo,1)
     % find all Li closest to Lo, then resampling pixel intensities
@@ -40,3 +40,4 @@ for i=1:size(Lo,1)
         Lr=[Lr;Lo(i,:)];
     end
 end
+
