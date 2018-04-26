@@ -1,5 +1,7 @@
 # Multiple-view modeling
 
+<iframe height=498 width=510 src="./output.mov">
+
 ![](./picture/result.jpg)
 
 ### 1. Initial normal estimation
