@@ -1,6 +1,6 @@
 # Multiple-view modeling
 
-<video width="480" height="480" controls> <source src="output.mov"> </video>
+![image](https://github.com/cehanluo/Multiple-view-modeling/blob/master/output.gif)
 
 ![](./picture/result.jpg)
 
