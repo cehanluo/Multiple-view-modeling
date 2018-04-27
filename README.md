@@ -1,6 +1,6 @@
 # Multiple-view modeling
 
-![image](https://github.com/cehanluo/Multiple-view-modeling/blob/master/output.gif)
+![image](https://github.com/cehanluo/Multiple-view-modeling/blob/master/output.gif =500x500)
 
 ![](./picture/result.jpg)
 
